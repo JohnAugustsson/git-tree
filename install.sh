@@ -92,7 +92,7 @@ else
     exit 1
   fi
   # Replace rather than merge, so files a newer version dropped don't linger.
-  rm -rf -- "$data_root/bin" "$data_root/src" "$data_root/docs"
+  rm -rf -- "${data_root:?}/bin" "${data_root:?}/src" "${data_root:?}/docs"
   mkdir -p -- "$data_root/docs"
   cp -a -- "$repo_root/bin" "$repo_root/src" "$data_root/"
   cp -a -- "$repo_root/docs/git-tree.1" "$data_root/docs/"
@@ -104,5 +104,5 @@ ensure_link "$data_root/docs/git-tree.1" "$man_dir/git-tree.1"
 
 printf 'Installed git-tree in %s\n' "$data_root"
 if [[ :$PATH: != *:$bin_dir:* ]]; then
-  printf 'Add %s to PATH so git finds `git tree`.\n' "$bin_dir"
+  printf 'Add %s to PATH so git can run "git tree".\n' "$bin_dir"
 fi
