@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.x"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Compile Python sources
+        run: python -m compileall -q src tests/python
+
+      - name: Run tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest discover -s tests/python -v
+
+  scripts:
+    name: Installer and demo repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Check shell scripts
+        run: shellcheck install.sh bin/git-tree scripts/demo-repo.sh
+
+      - name: Install into a prefix
+        run: |
+          ./install.sh --prefix "$RUNNER_TEMP/prefix"
+          "$RUNNER_TEMP/prefix/bin/git-tree" --version
+          test -L "$RUNNER_TEMP/prefix/share/man/man1/git-tree.1"
+
+      - name: Draw the demo repository
+        run: |
+          scripts/demo-repo.sh "$RUNNER_TEMP/demo"
+          cd "$RUNNER_TEMP/demo/weatherline"
+          PATH="$RUNNER_TEMP/prefix/bin:$PATH" git tree | tee graph.txt
+          grep -q 'HEAD → main' graph.txt

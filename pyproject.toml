@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "git-tree"
+dynamic = ["version"]
+description = "A commit graph for the terminal with an interactive commit and diff browser"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "John Augustsson" }]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/JohnAugustsson/git-tree"
+Repository = "https://github.com/JohnAugustsson/git-tree.git"
+Issues = "https://github.com/JohnAugustsson/git-tree/issues"
+
+[project.scripts]
+git-tree = "git_tree.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.dynamic]
+version = { attr = "git_tree.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]

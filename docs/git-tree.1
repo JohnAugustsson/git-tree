@@ -1,0 +1,86 @@
+.TH GIT-TREE 1 2026-11-04 "git-tree 0.1.0" "User Commands"
+.SH NAME
+git-tree \- commit graph of every branch, with an interactive browser
+.SH SYNOPSIS
+.B git tree
+.RI [ "git log options" ]
+.RI [ revision ...]
+.RB [[ \-\- ]
+.IR path ...]
+.br
+.B git tree
+.BR \-h " | " \-\-version
+.SH DESCRIPTION
+.B git tree
+draws the history of every local branch, remote branch and tag, one row per
+commit. Every line of history keeps its own column and colour: a branch-off is
+drawn on its fork point's row and a merge on the merge commit's row, so lines
+stay in their column instead of drifting between rows. The checked-out branch
+runs straight down the left edge. Refs are shown as labels; a local branch
+whose remote counterpart is on the same commit is shown once, marked
+.BR \[u21C5] .
+Author, date and abbreviated hash sit in aligned columns on the right.
+.PP
+In a terminal,
+.B git tree
+opens an interactive browser. Enter on a commit shows its full message with
+the files it changed below; Enter on a file shows its diff. Merges are shown
+against their first parent. When standard output is not a terminal the graph
+is printed as plain text.
+.PP
+All arguments are passed to
+.BR git\-log (1),
+so limits such as
+.BR \-n ,
+.BR \-\-since ,
+.B \-\-author
+and paths apply.
+.SH KEYS
+.TP
+.BR Up / Down ", " j / k
+Move the selection, or scroll a diff.
+.TP
+.BR PgUp / PgDn ", " b / Space
+Move a page.
+.TP
+.BR Home / End ", " g / G
+Go to the first or last item.
+.TP
+.B Enter
+Open the selected commit, or the selected file's diff.
+.TP
+.BR J / K
+Scroll a commit message that is longer than its half of the screen.
+.TP
+.B /
+Search the commits, files or diff lines. Matches are highlighted and the
+selection jumps to the next one as you type. The search is a literal, smart-case
+match: case-insensitive unless the query contains a capital letter.
+.B Enter
+keeps the search,
+.B Esc
+or Backspace on an empty query cancels it and returns to where it started.
+.TP
+.BR n / N
+Go to the next or previous match, wrapping around the ends.
+.TP
+.B Esc
+Clear the current search, otherwise go back one level. In the graph it quits.
+.TP
+.B q
+Quit.
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+Show a summary of usage and keys. Run as
+.BR "git tree \-\-help" ,
+git shows this page instead.
+.TP
+.B \-\-version
+Show the version.
+.SH EXIT STATUS
+0 on success, otherwise the status of the failing
+.B git
+command.
+.SH SEE ALSO
+.BR git\-log (1)
